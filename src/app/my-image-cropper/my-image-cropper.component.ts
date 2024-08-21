@@ -16,25 +16,38 @@ import {
 export class MyImageCropperComponent {
   imageChangeEvent: Event | null = null;
   croppedImage: SafeUrl = '';
+  loading = false;
+  showCropper = false;
+
+  processImageFile(event: Event) {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.loading = true;
+    };
+  }
 
   constructor(private sanitizer: DomSanitizer) {}
 
   onFileChange(event: Event): void {
+    this.loading = true;
     this.imageChangeEvent = event;
   }
 
   loadImageFailed() {
-    throw new Error('Method not implemented.');
+    console.error('Load image failed');
   }
   cropperReady() {
-    throw new Error('Method not implemented.');
+    this.loading = false;
   }
   imageLoaded(event: LoadedImage) {
-    throw new Error('Method not implemented.');
+    this.showCropper = true;
   }
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = this.sanitizer.bypassSecurityTrustUrl(
       event.objectUrl || event.base64 || ''
     );
+
+    console.log(event);
   }
 }
